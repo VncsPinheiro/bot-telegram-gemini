@@ -1,0 +1,3 @@
+https://api.telegram.org/bot8587661948:AAHZqIjoMb9Ktdn0zjlqwRiek4wnGwSKHZo/setWebhook?url=https://ctx-esc-toto-p.loca.lt/8587661948:AAHZqIjoMb9Ktdn0zjlqwRiek4wnGwSKHZo&drop_pending_updates=true
+
+https://api.telegram.org/bot8587661948:AAHZqIjoMb9Ktdn0zjlqwRiek4wnGwSKHZo/getWebhookInfo

@@ -13,6 +13,10 @@ bot.use(composer)
 
 app.post(`/${env.BOT_TOKEN}`, webhookCallback(bot, "express"))
 app.get('/', (__req, res) => res.send('Bot está online!'))
+app.get(`/set-webhook/${env.BOT_TOKEN}`, async (req, res) => {
+  await bot.api.setWebhook(`https://${env.DOMAIN}/${env.BOT_TOKEN}`)
+  console.log('Web hook set!')
+})
 
 app.listen(env.PORT, async () => {
   console.log(env.DOMAIN) 
