@@ -5,7 +5,7 @@ config()
 const envSchema = z.object({
   PORT: z.coerce.number().default(3000),
   BOT_TOKEN: z.string(),
-  DOMAIN: z.string().startsWith('https://'),
+  DOMAIN: z.string(),
   GEMINI_API_KEY: z.string(),
   ELEVENLABS_API_KEY: z.string()
 })
