@@ -1,8 +1,11 @@
-import { Context } from "grammy";
+import { type Context, InputFile } from "grammy";
 import { Gemini } from "../services/gemini";
+import { ElevenLabs } from "../services/eleven-labs";
+import path from "node:path";
 
 export class TextMessageClass {
-  constructor(private geminiService: Gemini) {}
+  constructor(private geminiService: Gemini, private elabsService: ElevenLabs) {}
+
   handle = async (ctx: Context) => {
     if (!ctx.message?.text) throw new Error('No message found')
 
@@ -11,8 +14,12 @@ export class TextMessageClass {
        ctx.reply('Erro ao responder sua pergunta')
        return
     }
-    ctx.reply(modelResponse)
+
+    await this.elabsService.createSpeech(modelResponse) 
+
+    const audioPath = path.resolve(process.cwd(), "src", "audios", "audio.mp3")
+    ctx.replyWithVoice(new InputFile(audioPath))
   }
 }
 
-export const TextMessageController = new TextMessageClass(Gemini.getInstance())
+export const TextMessageController = new TextMessageClass(Gemini.getInstance(), ElevenLabs.getInstance())

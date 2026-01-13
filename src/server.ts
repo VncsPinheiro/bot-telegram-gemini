@@ -1,22 +1,20 @@
 import express from 'express'
 import { env } from './env'
-import { Bot, Composer } from 'grammy'
+import { Bot, Composer, webhookCallback } from 'grammy'
 import { TextMessageController } from './controllers/text-message-controller';
 
-const bot = new Bot(env.BOT_TOKEN); // <-- place your bot token in this string
+const app = express()
+app.use(express.json())
 
-// bot.on("message:text", (ctx) => ctx.reply("Echo: " + ctx.message.text));
-
+const bot = new Bot(env.BOT_TOKEN)
 const composer = new Composer()
-
 composer.on('message:text', TextMessageController.handle)
-
 bot.use(composer)
-// Start the bot (using long polling)
-bot.start();
 
-// const app = express()
+app.post(`/${env.BOT_TOKEN}`, webhookCallback(bot, "express"))
+app.get('/', (__req, res) => res.send('Bot está online!'))
 
-// app.listen(env.PORT, () => {
-//   console.log(`Server running on port ${env.PORT}`)
-// })
+app.listen(env.PORT, async () => {
+  await bot.api.setWebhook(`https://${env.DOMAIN}/${env.BOT_TOKEN}`)
+  console.log(`Server running on port ${env.PORT}`)
+})
