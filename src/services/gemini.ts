@@ -18,9 +18,8 @@ export class Gemini {
   async chat(message: string) {
     const response = await this.gemini.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: message
+      contents: message,
     })
-
     return response.text
   }
 }
