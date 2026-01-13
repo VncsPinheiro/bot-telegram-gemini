@@ -15,6 +15,7 @@ app.post(`/${env.BOT_TOKEN}`, webhookCallback(bot, "express"))
 app.get('/', (__req, res) => res.send('Bot está online!'))
 
 app.listen(env.PORT, async () => {
+  console.log(env.DOMAIN) 
   await bot.api.setWebhook(`https://${env.DOMAIN}/${env.BOT_TOKEN}`)
   console.log(`Server running on port ${env.PORT}`)
 })

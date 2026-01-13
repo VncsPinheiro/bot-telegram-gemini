@@ -7,7 +7,9 @@ export class TextMessageClass {
   constructor(private geminiService: Gemini, private elabsService: ElevenLabs) {}
 
   handle = async (ctx: Context) => {
+    console.log(ctx.message?.text)
     if (!ctx.message?.text) throw new Error('No message found')
+    await ctx.replyWithChatAction("typing");
 
     const modelResponse = await this.geminiService.chat(ctx.message?.text)
     if (!modelResponse) {
@@ -15,10 +17,11 @@ export class TextMessageClass {
        return
     }
 
-    await this.elabsService.createSpeech(modelResponse) 
+    // await this.elabsService.createSpeech(modelResponse) 
 
-    const audioPath = path.resolve(process.cwd(), "src", "audios", "audio.mp3")
-    ctx.replyWithVoice(new InputFile(audioPath))
+    // const audioPath = path.resolve(process.cwd(), "src", "audios", "audio.mp3")
+    // ctx.replyWithVoice(new InputFile(audioPath))
+    ctx.reply(modelResponse)
   }
 }
 
