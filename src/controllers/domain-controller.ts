@@ -79,6 +79,21 @@ export class DomainControllerClass {
 		})
 	}
 
+	handleWebhookMaintenance = async (__req: Request, res: Response) => {
+		const data = await this.getWebHookInfo()
+		if (data.isLeft()) return res.status(400).send('Error to get the data from webhook')
+
+		const path = `https://${this.url}/${this.secret}`
+		
+		if (data.value.result?.url && data.value.result.url === path) return res.status(200).send('Nothing to change')
+		
+		const setWebhookResult = await this.setWebHookUrl()
+
+		if (setWebhookResult.isLeft()) return res.status(400).send(`Error trying to set webhook. Message: ${setWebhookResult.value}`)
+
+		return res.status(202).send(`Message: ${String(setWebhookResult.value)}`)
+	}
+
 	private async getWebHookInfo(): Promise<Either<Error, TelegramApiResponse>> {
 		try {
 			const response = await fetch(
