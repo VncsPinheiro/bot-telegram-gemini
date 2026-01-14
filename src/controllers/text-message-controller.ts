@@ -1,28 +1,35 @@
-import { type Context, InputFile } from "grammy";
-import { Gemini } from "../services/gemini";
-import { ElevenLabs } from "../services/eleven-labs";
-import path from "node:path";
+import { type Context, InputFile } from 'grammy'
+import { Gemini } from '../services/gemini'
+import { ElevenLabs } from '../services/eleven-labs'
 
 export class TextMessageClass {
-  constructor(private geminiService: Gemini, private elabsService: ElevenLabs) {}
+	constructor(
+		private geminiService: Gemini,
+		private elabsService: ElevenLabs,
+	) {}
 
-  handle = async (ctx: Context) => {
-    console.log(ctx.message?.text)
-    if (!ctx.message?.text) throw new Error('No message found')
-    await ctx.replyWithChatAction("typing");
+	handle = async (ctx: Context) => {
+		console.log(ctx.chat)
+		if (!ctx.message?.text) {
+			return ctx.reply('Nenhuma mensagem pra responder')
+		}
 
-    const modelResponse = await this.geminiService.chat(ctx.message?.text)
-    if (!modelResponse) {
-       ctx.reply('Erro ao responder sua pergunta')
-       return
-    }
+		await ctx.replyWithChatAction('typing')
 
-    // await this.elabsService.createSpeech(modelResponse) 
+		const modelResponse = await this.geminiService.chat(ctx.message?.text)
+		if (modelResponse.isLeft()) {
+			return ctx.reply('Erro ao responder sua pergunta')
+		}
 
-    // const audioPath = path.resolve(process.cwd(), "src", "audios", "audio.mp3")
-    // ctx.replyWithVoice(new InputFile(audioPath))
-    ctx.reply(modelResponse)
-  }
+		// await this.elabsService.createSpeech(modelResponse)
+
+		// const audioPath = path.resolve(process.cwd(), "src", "audios", "audio.mp3")
+		// ctx.replyWithVoice(new InputFile(audioPath))
+		return ctx.reply(modelResponse.value)
+	}
 }
 
-export const TextMessageController = new TextMessageClass(Gemini.getInstance(), ElevenLabs.getInstance())
+export const TextMessageController = new TextMessageClass(
+	Gemini.getInstance(),
+	ElevenLabs.getInstance(),
+)
