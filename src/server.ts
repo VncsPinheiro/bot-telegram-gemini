@@ -19,9 +19,11 @@ app.get('/get-webhook-info', (req, res) => {
   res.status(200).send(env.DOMAIN)
 })
 
-app.listen(env.PORT, async () => {
-	const path = `https://${env.DOMAIN}/${env.BOT_TOKEN}`
-	await bot.api.setWebhook(path)
-	console.log(`Server running on port ${env.PORT}`)
-	console.log(`Access on ${path}`)
-})
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(env.PORT || 3000, () => {
+    console.log(`Local server running on port ${env.PORT}`)
+  })
+}
+
+// O segredo para a Vercel funcionar:
+export default app
