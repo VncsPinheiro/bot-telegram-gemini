@@ -54,7 +54,7 @@ export class DomainControllerClass {
 		if (webHookInfo.isLeft())
 			return res.status(502).send(webHookInfo.value.message)
 		console.log(webHookInfo)
-		if (webHookInfo.value.result.url === `${this.url}/${this.secret}`)
+		if (webHookInfo.value.result?.url === `${this.url}/${this.secret}`)
 			return res.status(200).send({
 				message: 'Nothing changed. Domain already was up to date',
 				url: this.url,
