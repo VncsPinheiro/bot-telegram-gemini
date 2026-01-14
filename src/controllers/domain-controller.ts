@@ -74,6 +74,8 @@ export class DomainControllerClass {
 		if (webhookData.isLeft())
 			return res.status(502).send(webhookData.value.message)
 
+			console.log(JSON.stringify(webhookData))
+
 		return res.status(200).send({
 			url: String(webhookData.value.result?.url ?? 'pão') ,
 		})
