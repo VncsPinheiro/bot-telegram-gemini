@@ -14,7 +14,7 @@ bot.use(composer)
 
 app.post(`/${env.SECRET}`, webhookCallback(bot, 'express'))
 app.get('/', (__req, res) => res.send('Bot está online!'))
-app.get(`/set-webhook/${env.SECRET}`, DomainController.handelSetWebhook)
+// app.get(`/set-webhook/${env.SECRET}`, DomainController.handelSetWebhook)
 app.get(`/webhook-info/${env.SECRET}`, DomainController.handleGetWebhookData)
 
 app.listen(env.PORT, async () => {
