@@ -75,7 +75,7 @@ export class DomainControllerClass {
 			return res.status(502).send(webhookData.value.message)
 
 		return res.status(200).send({
-			url: `${webhookData.value.result.url}`,
+			url: String(webhookData.value.result?.url ?? 'pão') ,
 		})
 	}
 
