@@ -4,6 +4,7 @@ config()
 
 const envSchema = z.object({
 	PORT: z.coerce.number().default(3000),
+	SECRET: z.string(),
 	BOT_TOKEN: z.string(),
 	DOMAIN: z.string(),
 	GEMINI_API_KEY: z.string(),

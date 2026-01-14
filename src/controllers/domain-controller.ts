@@ -37,28 +37,46 @@ type TelegramSetWebHookResponse =
 export class DomainControllerClass {
 	private url: string
 	private readonly botToken: string
+	private readonly secret: string
 
 	constructor() {
 		this.url = env.DOMAIN
 		this.botToken = env.BOT_TOKEN
+		this.secret = env.SECRET
 	}
 
-	handle = async (req: Request, res: Response) => {
-		// if (this.checkWebhookUrl(req.query.url as string))
-		// 	this.url = req.query.url as string
+	handelSetWebhook = async (req: Request, res: Response) => {
+		if (this.checkWebhookUrl(req.query.url as string))
+			this.url = req.query.url as string
+		// console.log(this.url)
 
 		const webHookInfo = await this.getWebHookInfo()
 		if (webHookInfo.isLeft())
 			return res.status(502).send(webHookInfo.value.message)
-
-		if (webHookInfo.value.result.url === this.url)
-			return res.status(200).send('Url was already in date')
+		console.log(webHookInfo)
+		if (webHookInfo.value.result.url === `${this.url}/${this.secret}`)
+			return res.status(200).send({
+				message: 'Nothing changed. Domain already was up to date',
+				url: this.url,
+			})
 
 		const setWebHookResponse = await this.setWebHookUrl()
 		if (setWebHookResponse.isLeft())
 			return res.status(502).send(setWebHookResponse.value.message)
 
-		return res.status(201).send('Url up to date')
+		return res.status(201).send({
+			message: 'Domain updated',
+			url: this.url,
+		})
+	}
+	handleGetWebhookData = async (__req: Request, res: Response) => {
+		const webhookData = await this.getWebHookInfo()
+		if (webhookData.isLeft())
+			return res.status(502).send(webhookData.value.message)
+
+		return res.status(200).send({
+			url: webhookData.value.result.url,
+		})
 	}
 
 	private async getWebHookInfo(): Promise<Either<Error, TelegramApiResponse>> {
@@ -79,7 +97,7 @@ export class DomainControllerClass {
 	> {
 		try {
 			const response = await fetch(
-				`https://api.telegram.org/bot${this.botToken}/setWebhook?url=https://${this.url}/${this.botToken}&drop_pending_updates=true`,
+				`https://api.telegram.org/bot${this.botToken}/setWebhook?url=${this.url}/${this.secret}&drop_pending_updates=true`,
 			).then((res) => res.json() as Promise<TelegramSetWebHookResponse>)
 
 			if (!response.ok || !response.result)
@@ -103,10 +121,6 @@ export class DomainControllerClass {
 
 			// 2. Verifica se é HTTPS (Obrigatório pelo Telegram)
 			if (parsedUrl.protocol !== 'https:') return false
-
-			// 3. Verifica se o TOKEN está exatamente no final do caminho
-			// Isso evita que 'meusite.com/token-falso' passe na validação
-			if (!parsedUrl.pathname.endsWith(this.botToken)) return false
 
 			return true
 		} catch {
