@@ -44,8 +44,8 @@ export class DomainControllerClass {
 	}
 
 	handle = async (req: Request, res: Response) => {
-		if (this.checkWebhookUrl(req.query.url as string))
-			this.url = req.query.url as string
+		// if (this.checkWebhookUrl(req.query.url as string))
+		// 	this.url = req.query.url as string
 
 		const webHookInfo = await this.getWebHookInfo()
 		if (webHookInfo.isLeft())
