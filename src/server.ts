@@ -1,10 +1,10 @@
-import express from 'express'
+import express, { Express } from 'express'
 import { env } from './env'
 import { Bot, Composer, webhookCallback } from 'grammy'
 import { TextMessageController } from './controllers/text-message-controller'
 import { DomainController } from './controllers/domain-controller'
 
-const app = express()
+const app: Express = express()
 app.use(express.json())
 
 const bot = new Bot(env.BOT_TOKEN)
