@@ -14,7 +14,7 @@ bot.use(composer)
 
 app.post(`/${env.BOT_TOKEN}`, webhookCallback(bot, 'express'))
 app.get('/', (__req, res) => res.send('Bot está online!'))
-app.get(`/set-webhook/${env.BOT_TOKEN}`, DomainController.handle)a
+app.get(`/set-webhook/${env.BOT_TOKEN}`, DomainController.handle)
 app.get('/get-webhook-info', (req, res) => {
   res.status(200).send(env.DOMAIN)
 })
