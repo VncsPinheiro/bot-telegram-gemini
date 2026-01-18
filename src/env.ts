@@ -12,6 +12,7 @@ const envSchema = z.object({
 		.enum(['gemini-2.5-flash', 'gemini-2.5-flash-lite'])
 		.default('gemini-2.5-flash-lite'),
 	ELEVENLABS_API_KEY: z.string(),
+	DATABASE_URL: z.string().startsWith('postgresql://'),
 })
 
 export const env = envSchema.parse(process.env)

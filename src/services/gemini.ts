@@ -1,6 +1,8 @@
 import { GoogleGenAI } from '@google/genai'
-import { env } from '../env'
 import { type Either, left, right } from '../core/Result'
+import { env } from '../env'
+import type { History } from '../types/History'
+
 let instance: Gemini | null = null
 
 export class Gemini {
@@ -16,11 +18,13 @@ export class Gemini {
 		return instance
 	}
 
-	async chat(message: string): Promise<Either<Error, string>> {
+	async chat(
+		contents: History[],
+	): Promise<Either<Error, string>> {
 		try {
 			const result = await this.gemini.models.generateContent({
 				model: env.GEMINI_MODEL,
-				contents: [{ role: 'user', parts: [{ text: message }] }],
+				contents,
 			})
 
 			const candidate = result.candidates?.[0]

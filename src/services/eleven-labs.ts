@@ -1,8 +1,8 @@
-import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js'
 import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
-import { env } from '../env'
+import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js'
 import { type Either, left, right } from '../core/Result'
+import { env } from '../env'
 
 let instance: ElevenLabs | null = null
 export class ElevenLabs {
