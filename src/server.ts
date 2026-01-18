@@ -18,7 +18,7 @@ app.post(`/${env.SECRET}`, webhookCallback(bot, 'express'))
 app.get('/', (__req, res) => res.send('Bot está online!'))
 app.get(`/set-webhook/${env.SECRET}`, DomainController.handelSetWebhook)
 app.get(`/webhook-info/${env.SECRET}`, DomainController.handleGetWebhookData)
-app.get('/maintenance', async(__req, res) => {
+app.get('/maintenance', async (__req, res) => {
 	await bot.api.setWebhook(path)
 	return res.status(200).send(`URL re-setted to ${path}`)
 })

@@ -3,3 +3,6 @@
 .env
 .txt
 /.vscode
+/src/generated/prisma
+/data
+/prisma/migrations

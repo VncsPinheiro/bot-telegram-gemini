@@ -1,0 +1,17 @@
+services:
+  botTelegramGemini:
+    container_name: bot-telegram-gemini
+    image: bitnami/postgresql:latest
+    environment:
+      - POSTGRESQL_USER=bot
+      - POSTGRESQL_PASSWORD=bot
+      - POSTGRESQL_DB=bot
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/pg:/bitnami/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bot -d bot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
