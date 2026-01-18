@@ -1,8 +1,9 @@
 import { PrismaPg } from '@prisma/adapter-pg'
+// import { PrismaClient } from '../generated/prisma/client'
+import { PrismaClient } from '@prisma/client'
 import { boolean } from 'zod'
 import { type Either, left, right } from '../core/Result'
 import { env } from '../env'
-import { PrismaClient } from '../generated/prisma/client'
 import type { History } from '../types/History'
 
 const adapter = new PrismaPg({ connectionString: `${env.DATABASE_URL}` })
@@ -54,7 +55,6 @@ export class Database {
 			})
 			if (!user) return left(new Error('Error creating user'))
 			return right(true)
-		
 		} catch (err: any) {
 			return left(new Error(`Erro: ${err}`))
 		}
@@ -66,7 +66,13 @@ export class Database {
 				where: {
 					id,
 				},
-				include: { messages: true },
+				include: {
+					messages: {
+						orderBy: {
+							date: 'asc', // 'asc' (ascendente) = da mais velha para a mais nova
+						},
+					},
+				},
 			})) as PrismaResponse
 
 			if (!queryResponse) {
